@@ -32,9 +32,10 @@ for bam in test_for.bam test_rev.bam
                                     if ( name ~ "rev" ) {strand = "-"} \
                                     else {strand = "+"}; \
                                     {printf strand"\t"}; \
-                                    strand = 0 } \
+                                    strand = 0 \
+                                    } \
                                 else if (i == 6) { \
-                                    igar=$i; \
+                                    cigar=$i; \
                                     gsub(/[0-9]*H|[0-9]*S|[0-9]*I/,"",cigar); \
                                     gsub("[A-Z]","\n",cigar); \
                                     len = split(cigar, arr, "\n"); \
