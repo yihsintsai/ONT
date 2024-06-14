@@ -2,15 +2,17 @@
 
 bam_file=${1}
 out_dir=${2}
+[[ ! -f $bam_file ]] && { echo "file not exists"; exit 1; }
+
 
 samtools view -@ 12 -F 16 $bam_file |awk 'OFS="\t" {print $1,$2,$3,$4,$5,$6,$10,$12}' > ${bam_file%.bam}_for.bam
 samtools view -@ 12 -f 16 $bam_file |awk 'OFS="\t" {print $1,$2,$3,$4,$5,$6,$10,$12}' > ${bam_file%.bam}_rev.bam
-echo `date`
+echo `date` "transfer format start"
 for bam in  ${bam_file%.bam}_for.bam ${bam_file%.bam}_rev.bam
         do
             echo $bam
             echo create pipe
-            [ ! -p tmp ] && mkfifo tmp
+            [ ! -p /mnt/nas2/yh/tmp ] && mkdir -p /mnt/nas2/yh/tmp
             exec 9<>tmp
         
         # fill in the pipe
@@ -79,7 +81,7 @@ for bam in  ${bam_file%.bam}_for.bam ${bam_file%.bam}_rev.bam
         wait
     done
     wait
-echo  close pipe
+echo  `date` "transfer format end"
 exec 9>&-
 rm tmp
 echo `date`
